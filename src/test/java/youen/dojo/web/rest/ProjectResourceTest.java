@@ -37,10 +37,10 @@ public class ProjectResourceTest {
 
     private static final String DEFAULT_NAME = "SAMPLE_TEXT";
     private static final String UPDATED_NAME = "UPDATED_TEXT";
-    
+
     private static final String DEFAULT_TYPE = "SAMPLE_TEXT";
     private static final String UPDATED_TYPE = "UPDATED_TEXT";
-    
+
 
     @Inject
     private ProjectRepository projectRepository;
@@ -68,7 +68,7 @@ public class ProjectResourceTest {
     @Transactional
     public void createProject() throws Exception {
         // Validate the database is empty
-        assertThat(projectRepository.findAll()).hasSize(0);
+        assertThat(projectRepository.findAll()).hasSize(4);
 
         // Create the Project
         restProjectMockMvc.perform(post("/app/rest/projects")
@@ -78,8 +78,8 @@ public class ProjectResourceTest {
 
         // Validate the Project in the database
         List<Project> projects = projectRepository.findAll();
-        assertThat(projects).hasSize(1);
-        Project testProject = projects.iterator().next();
+        assertThat(projects).hasSize(5);
+        Project testProject = projects.get(4);
         assertThat(testProject.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProject.getType()).isEqualTo(DEFAULT_TYPE);
     }
@@ -95,9 +95,9 @@ public class ProjectResourceTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.[0].id").value(project.getId().intValue()))
-                .andExpect(jsonPath("$.[0].name").value(DEFAULT_NAME.toString()))
-                .andExpect(jsonPath("$.[0].type").value(DEFAULT_TYPE.toString()));
+                .andExpect(jsonPath("$.[4].id").value(project.getId().intValue()))
+                .andExpect(jsonPath("$.[4].name").value(DEFAULT_NAME.toString()))
+                .andExpect(jsonPath("$.[4].type").value(DEFAULT_TYPE.toString()));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class ProjectResourceTest {
     @Transactional
     public void getNonExistingProject() throws Exception {
         // Get the project
-        restProjectMockMvc.perform(get("/app/rest/projects/{id}", 1L))
+        restProjectMockMvc.perform(get("/app/rest/projects/{id}", 10L))
                 .andExpect(status().isNotFound());
     }
 
@@ -139,8 +139,8 @@ public class ProjectResourceTest {
 
         // Validate the Project in the database
         List<Project> projects = projectRepository.findAll();
-        assertThat(projects).hasSize(1);
-        Project testProject = projects.iterator().next();
+        assertThat(projects).hasSize(5);
+        Project testProject = projects.get(4);
         assertThat(testProject.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProject.getType()).isEqualTo(UPDATED_TYPE);
     }
@@ -158,6 +158,6 @@ public class ProjectResourceTest {
 
         // Validate the database is empty
         List<Project> projects = projectRepository.findAll();
-        assertThat(projects).hasSize(0);
+        assertThat(projects).hasSize(4);
     }
 }
