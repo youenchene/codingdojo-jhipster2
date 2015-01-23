@@ -32,8 +32,13 @@
                         </div>
                         <div class="form-group">
                             <label>Type</label>
-                            <input type="text" class="form-control"
-                                   ng-model="project.type">
+                            <select ng-model="project.type" class="form-control">
+                                <option value="Interne">Interne</option>
+                                <option value="Régie Forfaité">Régie Forfaité</option>
+                                <option value="Forfait">Forfait</option>
+                                <option value="Régie">Régie</option>
+                                <option value="Formation">Formation</option>
+                            </select>
                         </div>
 
 
