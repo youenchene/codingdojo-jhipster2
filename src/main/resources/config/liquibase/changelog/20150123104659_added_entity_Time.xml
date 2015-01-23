@@ -18,18 +18,18 @@
             <column name="date" type="date"/>
             <column name="time" type="decimal(10,2)"/>
             <column name="project_id" type="bigint"/>
-            <column name="user_id" type="bigint"/>
+            <column name="user_login" type="bigint"/>
         </createTable>
-        
+
         <addForeignKeyConstraint baseColumnNames="project_id"
                                  baseTableName="T_TIME"
                                  constraintName="fk_time_project_id"
                                  referencedColumnNames="id"
                                  referencedTableName="T_PROJECT"/>
-        <addForeignKeyConstraint baseColumnNames="user_id"
+        <addForeignKeyConstraint baseColumnNames="user_login"
                                  baseTableName="T_TIME"
-                                 constraintName="fk_time_user_id"
-                                 referencedColumnNames="id"
+                                 constraintName="fk_time_user_login"
+                                 referencedColumnNames="login"
                                  referencedTableName="T_USER"/>
     </changeSet>
 </databaseChangeLog>
