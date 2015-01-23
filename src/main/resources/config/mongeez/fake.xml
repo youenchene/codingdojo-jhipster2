@@ -1,0 +1,7 @@
+<mongoChangeLog>
+    <changeSet changeId="ChangeSet-T_Fake" author="jhipster">
+        <script>
+            db.T_FAKE.insert({"_id" : "1ab","name" : "toto"});
+        </script>
+    </changeSet>
+</mongoChangeLog>
