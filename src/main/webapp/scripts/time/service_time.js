@@ -6,3 +6,11 @@ simplecraApp.factory('Time', function ($resource) {
             'get': { method: 'GET'}
         });
     });
+
+
+simplecraApp.factory('User', function ($resource) {
+    return $resource('app/rest/users/:id', {}, {
+        'query': { method: 'GET', isArray: true},
+        'get': { method: 'GET'}
+    });
+});

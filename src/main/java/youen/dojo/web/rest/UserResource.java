@@ -1,6 +1,7 @@
 package youen.dojo.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import youen.dojo.domain.Project;
 import youen.dojo.domain.User;
 import youen.dojo.repository.UserRepository;
 import youen.dojo.security.AuthoritiesConstants;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,11 +39,22 @@ public class UserResource {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @Timed
-    @RolesAllowed(AuthoritiesConstants.ADMIN)
     ResponseEntity<User> getUser(@PathVariable String login) {
         log.debug("REST request to get User : {}", login);
         return Optional.ofNullable(userRepository.findOne(login))
                 .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    /**
+     * GET  /rest/projects -> get all the projects.
+     */
+    @RequestMapping(value = "/rest/users",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<User> getAll() {
+        log.debug("REST request to get all Projects");
+        return userRepository.findAll();
     }
 }
