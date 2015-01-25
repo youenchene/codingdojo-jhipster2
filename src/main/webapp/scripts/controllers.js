@@ -2,7 +2,29 @@
 
 /* Controllers */
 
-simplecraApp.controller('MainController', function ($scope) {
+simplecraApp.controller('MainController', function ($scope,$http, $rootScope,Account,Session) {
+
+
+    $scope.loggedtimes=[];
+    var refreshLoggedTimes=function(login) {
+        $http.get("app/rest/summary/lastTimesLoggedByUser/"+login).success(function (data) {
+            $scope.loggedtimes = data;
+
+        });
+    }
+    if (staticAccount == undefined) {
+        Account.get(function(data) {
+            Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
+            $rootScope.account = Session;
+            staticAccount=Session;
+            refreshLoggedTimes(staticAccount.login);
+
+        });
+    } else {
+        refreshLoggedTimes(staticAccount.login);
+    }
+
+
     });
 
 simplecraApp.controller('AdminController', function ($scope) {

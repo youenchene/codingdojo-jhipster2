@@ -2,6 +2,8 @@
 
 /* Services */
 
+var staticAccount;
+
 simplecraApp.factory('LanguageService', function ($http, $translate, LANGUAGES) {
         return {
             getBy: function(language) {
@@ -156,6 +158,7 @@ simplecraApp.factory('AuthenticationSharedService', function ($rootScope, $http,
                     Account.get(function(data) {
                         Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
                         $rootScope.account = Session;
+                        staticAccount=Session;
                         authService.loginConfirmed(data);
                     });
                 }).error(function (data, status, headers, config) {
@@ -165,7 +168,7 @@ simplecraApp.factory('AuthenticationSharedService', function ($rootScope, $http,
                     AccessToken.remove();
                     delete httpHeaders.common['Authorization'];
                     $rootScope.$broadcast('event:auth-loginRequired', data);
-                    
+
                 });
             },
             valid: function (authorizedRoles) {

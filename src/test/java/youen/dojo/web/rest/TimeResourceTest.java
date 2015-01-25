@@ -1,6 +1,7 @@
 package youen.dojo.web.rest;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
@@ -10,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +24,11 @@ import java.util.List;
 import youen.dojo.Application;
 import youen.dojo.domain.Time;
 import youen.dojo.repository.TimeRepository;
+import youen.dojo.repository.UserRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
@@ -39,13 +43,16 @@ public class TimeResourceTest {
 
     private static final LocalDate DEFAULT_DATE = new LocalDate(0L);
     private static final LocalDate UPDATED_DATE = new LocalDate();
-    
+
     private static final BigDecimal DEFAULT_TIME = BigDecimal.ZERO;
     private static final BigDecimal UPDATED_TIME = BigDecimal.ONE;
-    
+
 
     @Inject
     private TimeRepository timeRepository;
+
+    @Inject
+    private UserRepository userRepository;
 
     private MockMvc restTimeMockMvc;
 
@@ -64,6 +71,7 @@ public class TimeResourceTest {
         time = new Time();
         time.setDate(DEFAULT_DATE);
         time.setTime(DEFAULT_TIME);
+        time.setUser(userRepository.getOne("kevin"));
     }
 
     @Test
@@ -95,7 +103,6 @@ public class TimeResourceTest {
         // Get all the times
         restTimeMockMvc.perform(get("/app/rest/times"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[0].id").value(time.getId().intValue()))
                 .andExpect(jsonPath("$.[0].date").value(DEFAULT_DATE.toString()))
@@ -161,5 +168,28 @@ public class TimeResourceTest {
         // Validate the database is empty
         List<Time> times = timeRepository.findAll();
         assertThat(times).hasSize(0);
+    }
+
+    @Test
+    @Transactional
+    @Ignore
+    public void shouldFindLast10ByLogin() throws Exception {
+        // Initialize the database
+        timeRepository.saveAndFlush(time);
+
+        // Get the time
+        MvcResult result=restTimeMockMvc.perform(get("/app/rest/summary/lastTimesLoggedByUser/{id}", "kevin")
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andDo(print())
+            .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+
+           /*
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.[0].id").value(time.getId().intValue()))
+            .andExpect(jsonPath("$.[0].date").value(DEFAULT_DATE.toString()))
+            .andExpect(jsonPath("$.[0].time").value(DEFAULT_TIME.intValue()))
+            .andExpect(jsonPath("$.[0].user.login").value("kevin"));*/
     }
 }

@@ -77,4 +77,17 @@ public class TimeResource {
         log.debug("REST request to delete Time : {}", id);
         timeRepository.delete(id);
     }
+
+
+    /**
+     * GET  /rest/times -> get all the times.
+     */
+    @RequestMapping(value = "/rest/summary/lastTimesLoggedByUser/{login}",
+        method = RequestMethod.GET,
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @Timed
+    public List<Time> getLastLoggedByLogin(@PathVariable String login) {
+        log.debug("REST request to last logged for user {}",login);
+        return timeRepository.findLastLoggerByUser(login);
+    }
 }
