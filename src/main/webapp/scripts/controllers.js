@@ -17,18 +17,29 @@ simplecraApp.controller('MainController', function ($scope,$http, $rootScope,Acc
 
         });
     }
+
+    $scope.daysStats="";
+    var refreshDaysStats=function(login) {
+        $http.get("app/rest/summary/daysByUser/"+login).success(function (data) {
+            $scope.daysStats = data;
+
+        });
+    }
+
     if (staticAccount == undefined) {
         Account.get(function(data) {
             Session.create(data.login, data.firstName, data.lastName, data.email, data.roles);
             $rootScope.account = Session;
             staticAccount=Session;
             refreshLoggedTimes(staticAccount.login);
+            refreshDaysStats(staticAccount.login);
             $scope.time= new Object();
             $scope.time.user=staticAccount;
 
         });
     } else {
         refreshLoggedTimes(staticAccount.login);
+        refreshDaysStats(staticAccount.login);
         $scope.time= new Object();
         $scope.time.user=staticAccount;
     }
@@ -41,6 +52,7 @@ simplecraApp.controller('MainController', function ($scope,$http, $rootScope,Acc
                 $('#saveTimeModal').modal('hide');
                 $scope.clear();
                 refreshLoggedTimes(staticAccount.login);
+                refreshDaysStats(staticAccount.login);
             });
     };
 

@@ -124,4 +124,32 @@ angular.module('simplecraApp')
                 });
             }
         };
+    })
+    .
+    directive('bars', function($parse) {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: '<div id="chart"></div>',
+            link: function (scope, element, attrs) {
+                scope.$watch('daysStats', function (daysStats) {
+                    console.log(attrs.daysStats);
+                    d3.selectAll("#chart > *").remove();
+                    var data = attrs.daysStats,
+                        chart = d3.select('#chart')
+                            .append("div").attr("class", "chart")
+                            .selectAll('div')
+                            .data(daysStats).enter()
+                            .append("div")
+                            .transition().ease("elastic")
+                            .style("width", function (d) {
+                                console.log(d)
+                                return d.time * 50 + "%";
+                            })
+                            .text(function (d) {
+                                return d.date +"("+ d.time+")";
+                            });
+                });
+            }
+        }
     });

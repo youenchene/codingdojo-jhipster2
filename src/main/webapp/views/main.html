@@ -8,12 +8,13 @@
                     You are logged in as user "Admin".
                     </div>
                     <div>Weather is {{weather}}</div>
+                    <h2 >Add a Time</h2>
                     <div>
                         <form name="form" role="form" novalidate
                               class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
                               ng-submit="create(time)" >
 
-                                <h4 id="myTimeLabel">Add a Time</h4>
+
 
                                     <input type="date"
                                            ng-model="time.date">
@@ -33,6 +34,8 @@
 
                         </form>
                     </div>
+                    <h2>Chart</h2>
+                    <bars></bars>
                     <h2>Last Logged times</h2>
                     <div ng-repeat="time in loggedtimes">
                         {{time.date}} - {{time.time}} for {{time.project.name}}
