@@ -7,6 +7,31 @@
                     <div class="alert alert-success" translate="main.logged.message" translate-values="{username: '{{account.login}}'}">
                     You are logged in as user "Admin".
                     </div>
+                    <div>
+                        <form name="form" role="form" novalidate
+                              class="ng-scope ng-invalid ng-invalid-required ng-dirty ng-valid-minlength"
+                              ng-submit="create(time)" >
+
+                                <h4 id="myTimeLabel">Add a Time</h4>
+
+                                    <input type="date"
+                                           ng-model="time.date">
+                                    <select ng-model="time.time" >
+                                        <option value="1">1 jour</option>
+                                        <option value="0.5">1 demi journée</option>
+                                        <option value="0.25">1 quart de journée</option>
+                                    </select>
+                                    <select  ng-model="time.project.id" ng-options="project.id as project.name for project in projects">
+                                    </select>
+                                <input type="hidden" ng-model="time.user.login"/>
+
+
+                                <button type="submit" ng-disabled="form.$invalid" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-save"></span> Save
+                                </button>
+
+                        </form>
+                    </div>
                     <h2>Last Logged times</h2>
                     <div ng-repeat="time in loggedtimes">
                         {{time.date}} - {{time.time}} for {{time.project.name}}

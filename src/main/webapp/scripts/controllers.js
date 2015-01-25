@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-simplecraApp.controller('MainController', function ($scope,$http, $rootScope,Account,Session) {
+simplecraApp.controller('MainController', function ($scope,$http, $rootScope,Account,Session,Time, Project) {
 
 
     $scope.loggedtimes=[];
@@ -18,12 +18,32 @@ simplecraApp.controller('MainController', function ($scope,$http, $rootScope,Acc
             $rootScope.account = Session;
             staticAccount=Session;
             refreshLoggedTimes(staticAccount.login);
+            $scope.time= new Object();
+            $scope.time.user=staticAccount;
 
         });
     } else {
         refreshLoggedTimes(staticAccount.login);
+        $scope.time= new Object();
+        $scope.time.user=staticAccount;
     }
+    $scope.projects = Project.query();
 
+    $scope.create = function (time) {
+        console.log(time);
+        Time.save(time,
+            function () {
+                $('#saveTimeModal').modal('hide');
+                $scope.clear();
+                refreshLoggedTimes(staticAccount.login);
+            });
+    };
+
+
+    $scope.clear = function () {
+        $scope.time = {date: null, time: null, id: null};
+        $scope.time.user=staticAccount;
+    };
 
     });
 
