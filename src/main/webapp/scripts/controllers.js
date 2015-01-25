@@ -4,6 +4,11 @@
 
 simplecraApp.controller('MainController', function ($scope,$http, $rootScope,Account,Session,Time, Project) {
 
+    $http.get("app/rest/weather/current").success(function (data) {
+        console.log(data);
+        $scope.weather = data;
+
+    });
 
     $scope.loggedtimes=[];
     var refreshLoggedTimes=function(login) {
